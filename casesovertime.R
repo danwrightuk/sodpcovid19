@@ -34,7 +34,7 @@ colnames(dat)[which(names(dat) == "areaCode")] <- "msoa11cd"
 #filter data to salisbury only
 sdat <- dplyr::filter(dat, str_detect(str_to_lower(areaName), "\\Salisbury"))
 
-#construct salisbury msaos for mapping
+#construct salisbury msoas for mapping
 saliscases <- merge(msoas, sdat, by="msoa11cd")
 
 #load in centroids for labels
@@ -46,10 +46,12 @@ colnames(labelsalis)[which(names(labelsalis) == "areaName")] <- "Name"
 
 anim = tmap_mode("plot") +
 tm_shape(saliscases) +
-  tm_polygons("newCasesBySpecimenDateRollingRate", id="areaName", palette = "-viridis", alpha=0.4, title = "Cases per 100,000 people", breaks=c(0,10,50,100,200,400,1000)) +
+  tm_polygons("newCasesBySpecimenDateRollingRate", id="areaName", palette = "-viridis",
+              title = "Cases per 100,000 people", breaks=c(0,10,50,100,200,400,1000),
+              interval.closure="right", alpha=0.7,
+              labels=c("0 to 10","11 to 50", "51 to 100", "101 to 200", "201 to 400", "401 to 1000")) +
   tm_facets(along = "date", free.coords = FALSE) +
   tm_shape(labelsalis) + tm_text("Name") +
   tm_layout(title="7-Day Rate of COVID-19 Cases")
 
-tmap_animation(tm=anim, filename = "anim2.gif", delay = 100)
-
+tmap_animation(tm=anim, filename = "anim3.gif", delay = 100)
