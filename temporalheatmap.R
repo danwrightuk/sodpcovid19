@@ -1,14 +1,12 @@
 library(httr)
-library(data.table)  # faster fread() and better weekdays()
-library(dplyr)       # consistent data.frame operations
-library(purrr)       # consistent & safe list/vector munging
-library(tidyr)       # consistent data.frame cleaning
-library(lubridate)   # date manipulation
-library(ggplot2)     # base plots are for Coursera professors
-library(scales)      # pairs nicely with ggplot2 for plot label formatting
-library(gridExtra)   # a helper for arranging individual ggplot objects
-library(ggthemes)    # has a clean theme for ggplot2
-library(viridis)     # best. color. palette. evar.
+library(data.table)  
+library(dplyr)       
+library(purrr)      
+library(tidyr)       
+library(ggplot2)     
+library(scales)      
+library(gridExtra)  
+library(viridis)    
 library(knitr)
 library(tidyverse)
 library(plotly)
@@ -36,16 +34,16 @@ sdataugust <- dplyr::filter(sdat, date >="2020-08-01")
 sdatmostrecent <- dplyr::filter(sdat, date >= (Sys.Date()-7))
 
 #reverse order of labels so ggplot plots the areas alphabetically
-sdat2 <- sdat %>%
+sdataug2 <- sdataugust %>%
   # reverse order of levels
   mutate(areaName=factor(areaName,levels=rev(sort(unique(areaName)))))
 
 #plot heatmap
-gg <- ggplot(sdat2, aes(x=date, y=areaName, fill=newCasesBySpecimenDateRollingRate)) +
+gg <- ggplot(sdataug2, aes(x=date, y=areaName, fill=newCasesBySpecimenDateRollingRate)) +
       geom_tile(color="white", size=0.1) +
       coord_fixed(ratio = 8) + 
       scale_fill_viridis(name="Cases per\n100,000 people", label=comma) +
-      labs(x=NULL, y=NULL, title="Rolling COVID-19 Rate by MSOA Area", subtitle="Most recent complete data for week ending 28 November") +
+      labs(x=NULL, y=NULL, title="Rolling Seven-Day COVID-19 Rate by MSOA Area", subtitle="Most recent complete data for week ending 28 November") +
       theme_bw() +
       theme(panel.border = element_blank()) + 
       theme(plot.title=element_text(hjust=0, face="bold", size=14)) + 
