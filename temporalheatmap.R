@@ -45,7 +45,7 @@ gg <- ggplot(sdat2, aes(x=date, y=areaName, fill=newCasesBySpecimenDateRollingRa
       geom_tile(color="white", size=0.1) +
       coord_fixed(ratio = 8) + 
       scale_fill_viridis(name="Cases per\n100,000 people", label=comma) +
-      labs(x=NULL, y=NULL, title="Rolling COVID-19 Rate by MSOA Area", subtitle="Most recent complete data for week ending 28") +
+      labs(x=NULL, y=NULL, title="Rolling COVID-19 Rate by MSOA Area", subtitle="Most recent complete data for week ending 28 November") +
       theme_bw() +
       theme(panel.border = element_blank()) + 
       theme(plot.title=element_text(hjust=0, face="bold", size=14)) + 
