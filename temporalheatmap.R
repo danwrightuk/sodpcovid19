@@ -30,48 +30,29 @@ dat$date <- as.Date(dat$date)
 
 sdat <- dplyr::filter(dat, str_detect(areaName, "\\Salisbury|\\Laverstock|Wilton, Nadder & Ebble|\\Great Wishford|\\Downton|Amesbury|Durrington & Bulford|Whaddon, Whiteparish & Winterslow|Larkhill, Shrewton & Bulford Camp"))
 
+#generate data if we wanted to look at only August-onwards
 sdataugust <- dplyr::filter(sdat, date >="2020-08-01")
+#generate data for only the last week
 sdatmostrecent <- dplyr::filter(sdat, date >= (Sys.Date()-7))
 
-sdat$areaName <- factor(sdat$areaName, levels = sdatmostrecent$areaName)
-reorder(sdat$areaName, sdat$newCasesBySpecimenDateRollingRate)
-
-sdat$areaName <- factor(x = sdat$areaName,
-                               levels = otter.scaled$accession[otter.order], 
-                               ordered = TRUE)
-
+#reverse order of labels so ggplot plots the areas alphabetically
 sdat2 <- sdat %>%
-  # convert state to factor and reverse order of levels
+  # reverse order of levels
   mutate(areaName=factor(areaName,levels=rev(sort(unique(areaName)))))
 
-
+#plot heatmap
 gg <- ggplot(sdat2, aes(x=date, y=areaName, fill=newCasesBySpecimenDateRollingRate)) +
       geom_tile(color="white", size=0.1) +
       coord_fixed(ratio = 8) + 
       scale_fill_viridis(name="Cases per\n100,000 people", label=comma) +
-      labs(x=NULL, y=NULL, title="Rolling COVID-19 Rate by MSOA Area") +
+      labs(x=NULL, y=NULL, title="Rolling COVID-19 Rate by MSOA Area", subtitle="Most recent complete data for week ending 28") +
       theme_bw() +
       theme(panel.border = element_blank()) + 
-      theme(plot.title=element_text(hjust=0)) + 
+      theme(plot.title=element_text(hjust=0, face="bold", size=14)) + 
+      theme(plot.subtitle=element_text(hjust=0, size=12)) + 
       theme(axis.ticks=element_blank()) +
       theme(axis.text=element_text(size=12)) + 
       theme(legend.title=element_text(size=12)) +
       theme(legend.text=element_text(size=9)) +
-      scale_x_date(expand = c(0, 0))
+      scale_x_date(expand = c(0, 0),date_breaks = "1 month", date_labels="%b")
 gg
-
-yy <- ggplot(sdat, aes(x=date, y=areaName, fill=newCasesBySpecimenDateRollingSum)) +
-  geom_tile(color="white") +
-  coord_fixed(ratio = 8) + 
-  scale_fill_viridis(name="Rolling Sum", label=comma) +
-  labs(x=NULL, y=NULL, title="Rolling COVID-19 Sums by MSOA Area") +
-  theme_bw() +
-  theme(panel.border = element_blank()) + 
-  theme(plot.title=element_text(hjust=0)) + 
-  theme(axis.ticks=element_blank()) +
-  theme(axis.text=element_text(size=12)) + 
-  theme(legend.title=element_text(size=12)) +
-  theme(legend.text=element_text(size=9)) 
-yy
-  
-data$item <- reorder(data$item,data$tot)
